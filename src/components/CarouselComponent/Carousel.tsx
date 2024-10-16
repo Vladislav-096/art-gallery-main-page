@@ -1,22 +1,21 @@
-import { URL, usePaintigListQuery } from "../../api/apiSlice";
+import { Artwork, URL, usePaintigListQuery } from "../../api/apiSlice";
 import { Carousel, Pagination } from "antd";
 import "antd/dist/reset.css";
-import "./style.css";
+import "./carousel.scss";
 import { useRef } from "react";
 import { useAppSelector } from "../../hooks/hooks";
 import { Loader } from "../Loader/Loader";
 
 export const CarouselComponent = () => {
   const carouselRef = useRef(null);
-  const text = useAppSelector((state) => {
-    return state.search.searchedString;
-  });
+  const theme = useAppSelector((state) => state.theme.theme);
+  const text = useAppSelector((state) => state.search.searchedString);
 
   const { data: paintingListData = [], isLoading: isLoadingPaintingList } =
     usePaintigListQuery(text);
 
-  function groupArray(array: any[], groupSize: number) {
-    return array.reduce((acc: any[][], item: any, index: number) => {
+  function groupArray(array: Artwork[], groupSize: number) {
+    return array.reduce((acc: Artwork[][], item: Artwork, index: number) => {
       const groupIndex = Math.floor(index / groupSize);
       if (!acc[groupIndex]) {
         acc[groupIndex] = [];
@@ -29,7 +28,6 @@ export const CarouselComponent = () => {
   const groupedData = groupArray(paintingListData, 6);
 
   const goToSlide = (index: number) => {
-    console.log("index", index);
     if (carouselRef.current) {
       (carouselRef.current as any).goTo(index - 1);
     }
@@ -58,15 +56,17 @@ export const CarouselComponent = () => {
                     <div className="col-4 card-item" key={itemIndex}>
                       <div className="card-item__inner-wrapper">
                         <img
-                          style={{ width: "100%", height: "260px" }}
+                          className="card-item__image"
                           src={URL + item.imageUrl}
                           alt={item.name}
                         />
-                        <div className="painting-descr">
-                          <h2 className="painting-name">
+                        <div className={`card-item__painting-descr ${theme}`}>
+                          <h2 className={`card-item__painting-name ${theme}`}>
                             {item.name.toUpperCase()}
                           </h2>
-                          <span className="painting-created">
+                          <span
+                            className={`card-item__painting-created ${theme}`}
+                          >
                             {item.created}
                           </span>
                         </div>
@@ -89,22 +89,3 @@ export const CarouselComponent = () => {
     </div>
   );
 };
-
-// [
-//   {
-//     authorId: 1,
-//     created: "1850",
-//     id: 1,
-//     imageUrl: "/images/The_ninth_wave.jpeg",
-//     locationId: 1,
-//     name: "The ninth wave",
-//   },
-//   {
-//     authorId: 2,
-//     created: "1747",
-//     id: 2,
-//     imageUrl: "/images/L_Enlevement_d_Europe.jpeg",
-//     locationId: 2,
-//     name: "L`Enlévement d`Europe",
-//   },
-// ];

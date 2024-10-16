@@ -1,9 +1,6 @@
-import LightThemeButtoPicture from "../../assets/toggle-light.svg";
-import DarkThemeButtoPicture from "../../assets/toggle-dark.svg";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { toggleTheme } from "./ThemeSlice";
-import '../../index.css'
-import "./style.css";
+import "./ToggleTheme.scss";
 
 export const ToggleTheme = () => {
   const dispatch = useAppDispatch();
@@ -15,16 +12,10 @@ export const ToggleTheme = () => {
 
   return (
     <div>
-      <button className="btn-reset btn-toggle" onClick={handleToggleTheme}>
-        {/* Когда смогу в препроцессоры - сделать в css чере переменные, чтобы плавно менялось */}
-        <img
-          className="toggle-picture"
-          src={
-            theme === "dark" ? DarkThemeButtoPicture : LightThemeButtoPicture
-          }
-          alt="Theme switch button"
-        />
-      </button>
+      <button
+        className={`btn-reset btn-toggle ${theme}`}
+        onClick={handleToggleTheme}
+      ></button>
     </div>
   );
 };
